@@ -3,7 +3,7 @@
 	"package": "name.crclr.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"HorseMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import name.crclr.event.SharedHealthEvents;
+import name.crclr.module.horse.FastLoudHorseModule;
 
 public class Crclr implements ModInitializer {
 	public static final String MOD_ID = "crclr";
@@ -22,5 +23,6 @@ public class Crclr implements ModInitializer {
 
 		LOGGER.info("Crclr has been initialized!");
 		SharedHealthEvents.register();
+		FastLoudHorseModule.register();
 	}
 }
