@@ -8,6 +8,7 @@ import name.crclr.data.SharedHealthDatas;
 
 public class SharedHealthEvents {
     static Logger logger = name.crclr.Crclr.LOGGER;
+    private static boolean processingDeath = false;
 
     public static void register() {
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamageTaken, damageTaken, blocked) -> {
@@ -18,8 +19,7 @@ public class SharedHealthEvents {
             SharedHealthDatas.sharedHealth = Math.max(0, newHealth);
 
             MinecraftServer server = player.level().getServer();
-            if (server == null)
-                return;
+            if (server == null) return;
 
             for (ServerPlayer players : server.getPlayerList().getPlayers()) {
                 players.setHealth(SharedHealthDatas.sharedHealth);
@@ -28,5 +28,21 @@ public class SharedHealthEvents {
                         players.getName().getString());
             }
         });
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+            if (!(entity instanceof ServerPlayer player)) {
+                return;
+            }
+            if (processingDeath == true)
+                return;
+            processingDeath = true;
+            MinecraftServer server = player.level().getServer();
+            if (server == null) return;
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                p.kill(p.level());
+            }
+            SharedHealthDatas.sharedHealth = 20.0F;
+            processingDeath = false;
+        });
+        
     }
 }
