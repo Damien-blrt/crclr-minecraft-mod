@@ -19,13 +19,14 @@ public class SharedHealthEvents {
             SharedHealthDatas.sharedHealth = Math.max(0, newHealth);
 
             MinecraftServer server = player.level().getServer();
-            if (server == null) return;
+            if (server != null) {
 
-            for (ServerPlayer players : server.getPlayerList().getPlayers()) {
-                players.setHealth(SharedHealthDatas.sharedHealth);
-                logger.info("Shared health updated: {} Player: {}",
-                        SharedHealthDatas.sharedHealth,
-                        players.getName().getString());
+                for (ServerPlayer players : server.getPlayerList().getPlayers()) {
+                    players.setHealth(SharedHealthDatas.sharedHealth);
+                    logger.info("Shared health updated: {} Player: {}",
+                            SharedHealthDatas.sharedHealth,
+                            players.getName().getString());
+                }
             }
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
@@ -36,13 +37,15 @@ public class SharedHealthEvents {
                 return;
             processingDeath = true;
             MinecraftServer server = player.level().getServer();
-            if (server == null) return;
-            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
-                p.kill(p.level());
+            if (server != null) {
+                for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                    p.kill(p.level());
+                    logger.info("Player dead : {}", p.getName().getString());
+                }
             }
             SharedHealthDatas.sharedHealth = 20.0F;
             processingDeath = false;
         });
-        
+
     }
 }
